@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -64,6 +65,15 @@ module.exports = {
       {
         test: /\.(jpg|png|gif)$/,
         use: [
+          {
+            loader: ImageMinimizerPlugin.loader,
+            options: {
+              severityError: "warning", // Ignore errors on corrupted images
+              minimizerOptions: {
+                plugins: ["gifsicle", "mozjpeg"],
+              },
+            },
+          },
           {
             loader: "file-loader",
             options: {
